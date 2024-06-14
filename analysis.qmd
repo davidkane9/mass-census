@@ -1,6 +1,36 @@
 ---
-title: "Mass Census Tracts"
-author: "David Kane"
 format: html
+execute: 
+  echo: false
 ---
+
+```{r}
+#| message: false
+
+library(tidyverse)
+```
+
+```{r}
+x <- read_csv("mass-tracts.csv", show_col_types = FALSE)
+```
+
+
+```{r}
+x |> 
+  drop_na() |> 
+  mutate(race = factor(race, levels = c("Hispanic", "Black", 
+                                         "Asian", "White"))) |> 
+  ggplot(aes(x = med_income, fill = race)) +
+    geom_density(alpha = 0.5, adjust = 2) +
+    theme_minimal() +
+    scale_x_continuous(labels = scales::dollar_format()) +
+    theme(axis.text.y = element_blank()) +
+    labs(title = "Median Income for Massachusetts Census Tracts",
+         subtitle = "The richest tracts are White",
+         x = "Median Income",
+         y = NULL,
+         fill = "Race",
+         caption = "The race of each tract is determined by the most numerous racial group\n present in that tract. Data from the American Community Survey 2022.")
+
+```
 
